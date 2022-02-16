@@ -58,6 +58,34 @@ def FBV_List(request):
 
 
 # 3.2 GET , PUT, DELETE
-@api_view()
-def ddd():
-    pass
+@api_view(['GET', 'PUT', 'DELETE'])
+def FBV_pk(request, pk):
+    try:
+        guest = Guest.objects.get(pk=pk)
+
+        # GET
+        if request.method == 'GET':
+            serializer = GuestSerializer(guest)
+            return Response(serializer.data)
+
+        # PUT
+        elif request.method == 'PUT':
+            serializer = GuestSerializer(guest, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # DELETE
+        elif request.method == 'DELETE':
+            guest.delete()
+            return Response(status=status.HTTP_200_OK)
+
+    except Guest.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+

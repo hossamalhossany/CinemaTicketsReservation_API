@@ -22,5 +22,6 @@ urlpatterns = [
     path('django/jsonres', views.no_rest_no_model),
     path('django/no_rest_from__model', views.no_rest_from__model),
     path('rest/FBV_List', views.FBV_List),
+    path('rest/FBV_List/<int:pk>', views.FBV_pk),
 
 ]
