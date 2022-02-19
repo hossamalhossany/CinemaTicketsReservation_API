@@ -19,9 +19,21 @@ from tickets import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # 1 without rest framework and  without models
     path('django/jsonres', views.no_rest_no_model),
+
+    # 2 without rest framework and from  models
     path('django/no_rest_from__model', views.no_rest_from__model),
+
+    # 3 Functions based views
+    # 3.1  GET and POST
     path('rest/FBV_List', views.FBV_List),
+    # 3.2 GET , PUT, DELETE
     path('rest/FBV_List/<int:pk>', views.FBV_pk),
+
+    # 4 CBV Class Based View
+    # 4.1  list and create == GET and POST
+    path('rest/CBV_lsit', views.CBV_lsit.as_view()),
 
 ]

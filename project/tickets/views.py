@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.http.response import JsonResponse
-from rest_framework import status,filters
+from rest_framework import status
 from rest_framework.response import Response
 
 from .models import Guest, Movie, Reservation
 from rest_framework.decorators import api_view
 from .serializers import GuestSerializer, MovieSerializer, ReservationSerializer
+from rest_framework.views import APIView
 
 
 # Create your views here. hossam at home
@@ -86,6 +87,18 @@ def FBV_pk(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+# 4 CBV Class Based View
+# 4.1  list and create == GET and POST
+class CBV_lsit(APIView):
+    def get(self, request):
+        guest = Guest.objects.all()
+        serializer = GuestSerializer(guest, many=True)
+        return Response(serializer.data)
 
-
-
+    def post(self, request):
+        serializer = GuestSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
