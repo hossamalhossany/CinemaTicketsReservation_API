@@ -9,7 +9,7 @@ class Movie(models.Model):
     movie = models.CharField(max_length=10)
     date = models.DateField()
     def __str__(self):
-        return self.hall
+        return self.movie
 
 
 
@@ -24,3 +24,5 @@ class Guest(models.Model):
 class Reservation(models.Model):
     guest = models.ForeignKey(Guest, related_name='reservation', on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, related_name='reservation', on_delete=models.CASCADE)
+
+
