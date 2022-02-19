@@ -188,13 +188,38 @@ class ViewSets_Movie(viewsets.ModelViewSet):
     serializer_class = MovieSerializer
 
 
-
 class ViewSets_Reservations(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
 
+
 # 8 find movie
 @api_view(['GET'])
-def find_bb():
-    pass
+def find_movie(request):
+    movies = Movie.objects.filter(
+        movie=request.data['movie'],
+        hall=request.data['hall']
+    )
+    serializer = MovieSerializer(movies, many=True)
+    return Response(serializer.data)
 
+
+@api_view(['POST'])
+def new_reservation(request):
+    movie = Movie.objects.get(
+        movie=request.data['movie'],
+        hall=request.data['hall']
+    )
+
+    guest = Guest()
+    guest.name = request.data['name']
+    guest.mobile = request.data['mobile']
+    guest.save()
+
+    reservation = Reservation()
+    reservation.guest = guest
+    reservation.movie = movie
+    reservation.save()
+
+    serializer = ReservationSerializer(reservation)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
