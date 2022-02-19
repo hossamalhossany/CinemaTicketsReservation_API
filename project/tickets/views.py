@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http.response import JsonResponse
+from django.http.response import JsonResponse, Http404
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -89,7 +89,7 @@ def FBV_pk(request, pk):
 
 # 4 CBV Class Based View
 # 4.1  list and create == GET and POST
-class CBV_lsit(APIView):
+class CBV_list(APIView):
     def get(self, request):
         guest = Guest.objects.all()
         serializer = GuestSerializer(guest, many=True)
@@ -102,3 +102,38 @@ class CBV_lsit(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+
+
+# 4.2  GET , PUT , DELETE
+class CBV_pk(APIView):
+    def get_object(self, pk):
+        try:
+            return Guest.objects.get(pk=pk)
+
+        except Guest.DoesNotExist:
+            raise Http404
+
+    # GET
+    def get(self, request, pk):
+        guest = self.get_object(pk=pk)
+        serializer = GuestSerializer(guest)
+        return Response(serializer.data)
+
+    # PUT
+    def put(self, request, pk):
+        guest = self.get_object(pk=pk)
+        serializer = GuestSerializer(guest, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def delete(self,requst, pk):
+        guest = self.get_object(pk=pk)
+        guest.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+

@@ -34,6 +34,9 @@ urlpatterns = [
 
     # 4 CBV Class Based View
     # 4.1  list and create == GET and POST
-    path('rest/CBV_lsit', views.CBV_lsit.as_view()),
+    path('rest/CBV_list', views.CBV_list.as_view()),
+    # 4.2 GET , PUT, DELETE
+    path('rest/CBV_list/<int:pk>', views.CBV_pk.as_view()),
+
 
 ]
